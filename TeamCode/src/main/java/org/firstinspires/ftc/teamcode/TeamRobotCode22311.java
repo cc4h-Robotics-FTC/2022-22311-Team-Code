@@ -89,8 +89,8 @@ public class TeamRobotCode22311 extends LinearOpMode {
         ClawMotor = hardwareMap.get(Servo.class, "Intake");
         ArmLift = hardwareMap.get(DcMotor.class,"Lift");
 
-        leftFrontDrive.setDirection(DcMotor.Direction.REVERSE);
-        leftBackDrive.setDirection(DcMotor.Direction.REVERSE);
+        leftFrontDrive.setDirection(DcMotor.Direction.FORWARD);
+        leftBackDrive.setDirection(DcMotor.Direction.FORWARD);
         rightFrontDrive.setDirection(DcMotor.Direction.FORWARD);
         rightBackDrive.setDirection(DcMotor.Direction.FORWARD);
         ClawMotor.setDirection(Servo.Direction.FORWARD);
@@ -104,13 +104,15 @@ public class TeamRobotCode22311 extends LinearOpMode {
         runtime.reset();
 
         // run until the end of the match (driver presses STOP)
+        double buttonPress = runtime.milliseconds();
+        double reductionFactor = 2.0;
         while (opModeIsActive()) {
             double max;
 
 
-            double axial = -gamepad1.left_stick_y;  // Note: pushing stick forward gives negative value
-            double lateral = gamepad1.left_stick_x;
-            double yaw = gamepad1.right_stick_x;
+            double axial = squareIt(-gamepad1.left_stick_y)/reductionFactor;  // Note: pushing stick forward gives negative value
+            double lateral = squareIt(gamepad1.left_stick_x)/reductionFactor;
+            double yaw = squareIt(gamepad1.right_stick_x)/reductionFactor;
             double Claw = gamepad2.right_stick_y;
             double Arms = gamepad2.left_stick_y;
 
@@ -151,11 +153,34 @@ public class TeamRobotCode22311 extends LinearOpMode {
             ClawMotor.setPosition(ClawForwardPower);
             ArmLift.setPower(ArmsForward);
 
+            if (gamepad1.left_bumper && ((runtime.milliseconds() - buttonPress) > 500) ) {
+                reductionFactor += 0.25;
+                buttonPress = runtime.milliseconds();
+            } else if (gamepad1.right_bumper &&  ((runtime.milliseconds() - buttonPress) > 500)) {
+                reductionFactor -= 0.25;
+                buttonPress = runtime.milliseconds();
+                reductionFactor = Math.max(1.75, reductionFactor);
+            }
+
+
 
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: " + runtime.toString());
             telemetry.addData("Front left/Right", "%4.2f, %4.2f", leftFrontPower, rightFrontPower);
             telemetry.addData("Back  left/Right", "%4.2f, %4.2f", leftBackPower, rightBackPower);
+            telemetry.addData("ReductionFactor", "%4.2f", reductionFactor);
+
             telemetry.update();
         }
-    }}
+    }
+
+    public double squareIt(double input) {
+        double sign = Math.signum(input);
+        if (sign > 0) {
+            return input * input;
+        } else {
+            return -(input * input);
+        }
+    }
+
+}
