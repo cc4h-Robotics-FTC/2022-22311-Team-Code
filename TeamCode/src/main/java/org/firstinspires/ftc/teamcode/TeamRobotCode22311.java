@@ -89,8 +89,8 @@ public class TeamRobotCode22311 extends LinearOpMode {
         ClawMotor = hardwareMap.get(Servo.class, "Intake");
         ArmLift = hardwareMap.get(DcMotor.class,"Lift");
 
-        leftFrontDrive.setDirection(DcMotor.Direction.REVERSE);
-        leftBackDrive.setDirection(DcMotor.Direction.REVERSE);
+        leftFrontDrive.setDirection(DcMotor.Direction.FORWARD);
+        leftBackDrive.setDirection(DcMotor.Direction.FORWARD);
         rightFrontDrive.setDirection(DcMotor.Direction.FORWARD);
         rightBackDrive.setDirection(DcMotor.Direction.FORWARD);
         ClawMotor.setDirection(Servo.Direction.FORWARD);
@@ -143,6 +143,8 @@ public class TeamRobotCode22311 extends LinearOpMode {
                 ArmsForward /= max;
             }
 
+            
+
             // Send calculated power to wheels
             leftFrontDrive.setPower(leftFrontPower);
             rightFrontDrive.setPower(rightFrontPower);
@@ -150,12 +152,14 @@ public class TeamRobotCode22311 extends LinearOpMode {
             rightBackDrive.setPower(rightBackPower);
             ClawMotor.setPosition(ClawForwardPower);
             ArmLift.setPower(ArmsForward);
+            telemetry.addData("Lift", "Initialized");
 
-
+// Take Team 16354 Charger for future use
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: " + runtime.toString());
             telemetry.addData("Front left/Right", "%4.2f, %4.2f", leftFrontPower, rightFrontPower);
             telemetry.addData("Back  left/Right", "%4.2f, %4.2f", leftBackPower, rightBackPower);
+
             telemetry.update();
         }
     }}
