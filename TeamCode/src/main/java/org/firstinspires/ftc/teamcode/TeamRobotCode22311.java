@@ -114,7 +114,24 @@ public class TeamRobotCode22311 extends LinearOpMode {
             double lateral = squareIt(gamepad1.left_stick_x)/reductionFactor;
             double yaw = squareIt(gamepad1.right_stick_x)/reductionFactor;
             double Claw = gamepad2.right_stick_y;
-            double Arms = gamepad2.left_stick_y;
+
+            if(gamepad2.left_bumper == true);
+                double Arms = 288;
+
+
+
+                int newLeftTarget;
+
+
+                newLeftTarget = ArmLift.getCurrentPosition() + (288);
+
+            // Turn On RUN_TO_POSITION
+                ArmLift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                ArmLift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+                ArmLift.setTargetPosition(newLeftTarget);
+
+
 
 
             // POV Mode uses left joystick to go forward & strafe, and right joystick to rotate.
@@ -153,7 +170,7 @@ public class TeamRobotCode22311 extends LinearOpMode {
             leftBackDrive.setPower(leftBackPower);
             rightBackDrive.setPower(rightBackPower);
             ClawMotor.setPosition(ClawForwardPower);
-            ArmLift.setPower(ArmsForward);
+            ArmLift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             telemetry.addData("Lift", "Initialized");
 
 // Take Team 16354 Charger for future use
