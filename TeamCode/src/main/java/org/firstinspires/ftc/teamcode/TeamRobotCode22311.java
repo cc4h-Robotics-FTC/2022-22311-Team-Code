@@ -82,12 +82,12 @@ public class TeamRobotCode22311 extends LinearOpMode {
 
         // Initialize the hardware variables. Note that the strings used here must correspond
         // to the names assigned during the robot configuration step on the DS or RC devices.
-        leftFrontDrive  = hardwareMap.get(DcMotor.class, "Left_Front");
-        leftBackDrive  = hardwareMap.get(DcMotor.class, "Left_Rear");
+        leftFrontDrive = hardwareMap.get(DcMotor.class, "Left_Front");
+        leftBackDrive = hardwareMap.get(DcMotor.class, "Left_Rear");
         rightFrontDrive = hardwareMap.get(DcMotor.class, "Right_Front");
         rightBackDrive = hardwareMap.get(DcMotor.class, "Right_Rear");
         ClawMotor = hardwareMap.get(Servo.class, "Intake");
-        ArmLift = hardwareMap.get(DcMotor.class,"Lift");
+        ArmLift = hardwareMap.get(DcMotor.class, "Lift");
 
         leftFrontDrive.setDirection(DcMotor.Direction.FORWARD);
         leftBackDrive.setDirection(DcMotor.Direction.FORWARD);
@@ -110,28 +110,24 @@ public class TeamRobotCode22311 extends LinearOpMode {
             double max;
 
 
-            double axial = squareIt(-gamepad1.left_stick_y)/reductionFactor;  // Note: pushing stick forward gives negative value
-            double lateral = squareIt(gamepad1.left_stick_x)/reductionFactor;
-            double yaw = squareIt(gamepad1.right_stick_x)/reductionFactor;
+            double axial = squareIt(-gamepad1.left_stick_y) / reductionFactor;  // Note: pushing stick forward gives negative value
+            double lateral = squareIt(gamepad1.left_stick_x) / reductionFactor;
+            double yaw = squareIt(gamepad1.right_stick_x) / reductionFactor;
             double Claw = gamepad2.right_stick_y;
 
-            if(gamepad2.left_bumper == true);
-                double Arms = 288;
+            if (gamepad2.right_bumper == true) {
+                encoderDrive(0.25,10.0);
+            }
 
 
+            // Send telemetry message to indicate successful Encoder reset
+            telemetry.addData("Starting at", "%7d", ArmLift.getCurrentPosition());
 
-                int newLeftTarget;
+            // Step through each leg of the path,
+            // Note: Reverse movement is obtained by setting a negative distance (not speed)
 
-
-                newLeftTarget = ArmLift.getCurrentPosition() + (288);
-
-            // Turn On RUN_TO_POSITION
-                ArmLift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                ArmLift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-                ArmLift.setTargetPosition(newLeftTarget);
-
-
+            telemetry.addData("Path", "Complete");
+//            sleep(1000);  // pause to display final telemetry message.
 
 
             // POV Mode uses left joystick to go forward & strafe, and right joystick to rotate.
@@ -144,25 +140,24 @@ public class TeamRobotCode22311 extends LinearOpMode {
             double leftBackPower = axial - lateral + yaw;
             double rightBackPower = axial + lateral - yaw;
             double ClawForwardPower = Claw;
-            double ArmsForward = Arms;
+//            double ArmsForward = Arm;
             // Normalize the values so no wheel power exceeds 100%
             // This ensures that the robot maintains the desired motion.
             max = Math.max(Math.abs(leftFrontPower), Math.abs(rightFrontPower));
             max = Math.max(max, Math.abs(leftBackPower));
             max = Math.max(max, Math.abs(rightBackPower));
-            max = Math.max(max, Math.abs(ClawForwardPower));
-            max = Math.max(max, Math.abs(ArmsForward));
+//            max = Math.max(max, Math.abs(ClawForwardPower));
+//            max = Math.max(max, Math.abs(ArmsForward));
 
             if (max > 1.0) {
                 leftFrontPower /= max;
                 rightFrontPower /= max;
                 leftBackPower /= max;
                 rightBackPower /= max;
-                ClawForwardPower /= max;
-                ArmsForward /= max;
+//                ClawForwardPower /= max;
+//                ArmsForward /= max;
             }
 
-            
 
             // Send calculated power to wheels
             leftFrontDrive.setPower(leftFrontPower);
@@ -170,20 +165,18 @@ public class TeamRobotCode22311 extends LinearOpMode {
             leftBackDrive.setPower(leftBackPower);
             rightBackDrive.setPower(rightBackPower);
             ClawMotor.setPosition(ClawForwardPower);
-            ArmLift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             telemetry.addData("Lift", "Initialized");
 
 // Take Team 16354 Charger for future use
 
-            if (gamepad1.left_bumper && ((runtime.milliseconds() - buttonPress) > 500) ) {
+            if (gamepad1.left_bumper && ((runtime.milliseconds() - buttonPress) > 500)) {
                 reductionFactor += 0.25;
                 buttonPress = runtime.milliseconds();
-            } else if (gamepad1.right_bumper &&  ((runtime.milliseconds() - buttonPress) > 500)) {
+            } else if (gamepad1.right_bumper && ((runtime.milliseconds() - buttonPress) > 500)) {
                 reductionFactor -= 0.25;
                 buttonPress = runtime.milliseconds();
                 reductionFactor = Math.max(1.75, reductionFactor);
             }
-
 
 
             // Show the elapsed game time and wheel power.
@@ -205,4 +198,65 @@ public class TeamRobotCode22311 extends LinearOpMode {
         }
     }
 
+
+    // Calculate the COUNTS_PER_INCH for your specific drive train.
+    // Go to your motor vendor website to determine your motor's COUNTS_PER_MOTOR_REV
+    // For external drive gearing, set DRIVE_GEAR_REDUCTION as needed.
+    // For example, use a value of 2.0 for a 12-tooth spur gear driving a 24-tooth spur gear.
+    // This is gearing DOWN for less speed and more torque.
+    /*
+     *  Method to perform a relative move, based on encoder counts.
+     *  Encoders are not reset as the move is based on the current position.
+     *  Move will stop if any of three conditions occur:
+     *  1) Move gets to the desired position
+     *  2) Move runs out of time
+     *  3) Driver stops the opmode running.
+     */
+
+    public void encoderDrive(double speed,
+                             double timeoutS) {
+        int newArmTarget;
+
+
+        // Ensure that the opmode is still active
+        if (opModeIsActive()) {
+
+            // Determine new target position, and pass to motor controller
+            newArmTarget = ArmLift.getCurrentPosition() + (288);
+
+            ArmLift.setTargetPosition(newArmTarget);
+
+
+            // Turn On RUN_TO_POSITION
+            ArmLift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+
+            // reset the timeout time and start motion.
+            runtime.reset();
+            ArmLift.setPower(Math.abs(speed));
+
+            // keep looping while we are still active, and there is time left, and both motors are running.
+            // Note: We use (isBusy() && isBusy()) in the loop test, which means that when EITHER motor hits
+            // its target position, the motion will stop.  This is "safer" in the event that the robot will
+            // always end the motion as soon as possible.
+            // However, if you require that BOTH motors have finished their moves before the robot continues
+            // onto the next step, use (isBusy() || isBusy()) in the loop test.
+            while (opModeIsActive() &&
+                    (runtime.seconds() < timeoutS) &&
+                    (ArmLift.isBusy())) {
+
+                // Display it for the driver.
+                telemetry.addData("Running to", " %7d", newArmTarget);
+                telemetry.addData("Currently at", " at %7d", ArmLift.getCurrentPosition());
+            }
+
+            // Stop all motion;
+
+
+            // Turn off RUN_TO_POSITION
+//            ArmLift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        }
+
+    }
 }
