@@ -16,20 +16,20 @@ public abstract class UseString2 extends OpMode {
 
 
 
-    @Override
-    public void loop() {
-    int X = 17;
-    // only X visible here
-    {
-        int Y = 19;
-    }
-    }
-    //X and Y are visible here
-        // {
-                //Only X visible here
-            }
-
-        }
+//    @Override
+//    public void loop() {
+//    int X = 17;
+//    // only X visible here
+//    {
+//        int Y = 19;
+//    }
+//    }
+//    //X and Y are visible here
+//        // {
+//                //Only X visible here
+//            }
+//
+//        }
 
 
 

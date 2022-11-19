@@ -76,8 +76,8 @@ public class TeamRobotCode22311 extends LinearOpMode {
     private DcMotor rightBackDrive = null;
     private Servo ClawMotor = null;
     private DcMotor ArmLift = null;
-    private final double MAXSPEED = 2.25;
-    private final double  MINSPEED = 1.75;
+    private final double MAXSPEED = 3.00 ;
+    private final double  MINSPEED = 2.25;
 
     public void runOpMode() {
 
