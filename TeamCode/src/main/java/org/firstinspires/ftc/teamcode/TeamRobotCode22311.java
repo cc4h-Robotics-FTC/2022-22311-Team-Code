@@ -121,12 +121,15 @@ public class TeamRobotCode22311 extends LinearOpMode {
             double lateral = squareIt(gamepad1.left_stick_x) / reductionFactor;
             double yaw = squareIt(gamepad1.right_stick_x) / reductionFactor;
             double Claw = gamepad2.right_stick_y;
+            double ArmPower = squareIt(-gamepad2.left_stick_y);
             double max;
             double leftFrontPower = axial + lateral + yaw;
             double rightFrontPower = axial - lateral - yaw;
             double leftBackPower = axial - lateral + yaw;
             double rightBackPower = axial + lateral - yaw;
             double ClawForwardPower = Claw;
+
+
             max = Math.max(Math.abs(leftFrontPower), Math.abs(rightFrontPower));
             max = Math.max(max, Math.abs(leftBackPower));
             max = Math.max(max, Math.abs(rightBackPower));
@@ -148,7 +151,11 @@ public class TeamRobotCode22311 extends LinearOpMode {
 
 
             if (gamepad2.right_bumper == true) {
-                encoderDrive(0.25,10.0);
+                //encoderDrive(0.25,10.0);
+            }
+
+            if(gamepad1.left_bumper){
+
             }
 
 
@@ -194,6 +201,7 @@ public class TeamRobotCode22311 extends LinearOpMode {
             leftBackDrive.setPower(leftBackPower);
             rightBackDrive.setPower(rightBackPower);
             ClawMotor.setPosition(ClawForwardPower);
+            ArmLift.setPower(ArmPower);
             telemetry.addData("Lift", "Initialized");
 
 // Take Team 16354 Charger for future use
