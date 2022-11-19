@@ -78,6 +78,9 @@ public class TeamRobotCode22311 extends LinearOpMode {
     private DcMotor ArmLift = null;
     private final double MAXSPEED = 3.00 ;
     private final double  MINSPEED = 2.25;
+    private final double CLAW_MOVEMENT_SIZE  = 0.05;
+    private final double CLAW_MAX_POS  = 0.6;
+    private final double CLAW_MIN_POS  = 0.2;
 
     public void runOpMode() {
 
@@ -106,28 +109,20 @@ public class TeamRobotCode22311 extends LinearOpMode {
 
         // run until the end of the match (driver presses STOP)
 
-
-
-
-
-
-
-
         double buttonPress = runtime.milliseconds();
         double reductionFactor = MINSPEED;
+        double clawPos = ClawMotor.getPosition();
         while (opModeIsActive()) {
 
             double axial = squareIt(-gamepad1.left_stick_y) / reductionFactor;  // Note: pushing stick forward gives negative value
             double lateral = squareIt(gamepad1.left_stick_x) / reductionFactor;
             double yaw = squareIt(gamepad1.right_stick_x) / reductionFactor;
-            double Claw = gamepad2.right_stick_y;
             double ArmPower = squareIt(-gamepad2.left_stick_y);
             double max;
             double leftFrontPower = axial + lateral + yaw;
             double rightFrontPower = axial - lateral - yaw;
             double leftBackPower = axial - lateral + yaw;
             double rightBackPower = axial + lateral - yaw;
-            double ClawForwardPower = Claw;
 
 
             max = Math.max(Math.abs(leftFrontPower), Math.abs(rightFrontPower));
@@ -142,45 +137,16 @@ public class TeamRobotCode22311 extends LinearOpMode {
             rightFrontPower /= max;
             leftBackPower /= max;
             rightBackPower /= max;
-//                ClawForwardPower /= max;
-//                ArmsForward /= max;
-//                ClawForwardPower /= max;
-//                ArmsForward /= max;
 
-
-
-
-            if (gamepad2.right_bumper == true) {
+            if (gamepad2.right_bumper ) {
                 //encoderDrive(0.25,10.0);
-            }
-
-            if(gamepad1.left_bumper){
-
             }
 
 
             // Send telemetry message to indicate successful Encoder reset
             telemetry.addData("Starting at", "%7d", ArmLift.getCurrentPosition());
 
-            // Step through each leg of the path,
-            // Note: Reverse movement is obtained by setting a negative distance (not speed)
-
             telemetry.addData("Path", "Complete");
-//            sleep(1000);  // pause to display final telemetry message.
-
-
-            // POV Mode uses left joystick to go forward & strafe, and right joystick to rotate.
-
-
-            // Combine the joystick requests for each axis-motion to determine each wheel's power.
-            // Set up a variable for each drive wheel to save the power level for telemetry.
-
-
-//            double ArmsForward = Arm;
-            // Normalize the values so no wheel power exceeds 100%
-            // This ensures that the robot maintains the desired motion.
-
-
 
             }
 
@@ -193,6 +159,16 @@ public class TeamRobotCode22311 extends LinearOpMode {
             }
 
 
+            if (gamepad2.right_bumper && debounce(buttonPress, 250)) {
+                clawPos += CLAW_MOVEMENT_SIZE;
+                clawPos = Math.min(CLAW_MAX_POS, clawPos);
+                buttonPress = runtime.milliseconds();
+            } else if (gamepad2.left_bumper  && debounce(buttonPress, 250)) {
+                clawPos -= CLAW_MOVEMENT_SIZE;
+                clawPos = Math.max(CLAW_MIN_POS, clawPos);
+                buttonPress = runtime.milliseconds();
+            }
+            ClawMotor.setPosition(clawPos);
 
 
             // Send calculated power to wheels
@@ -200,13 +176,9 @@ public class TeamRobotCode22311 extends LinearOpMode {
             rightFrontDrive.setPower(rightFrontPower);
             leftBackDrive.setPower(leftBackPower);
             rightBackDrive.setPower(rightBackPower);
-            ClawMotor.setPosition(ClawForwardPower);
             ArmLift.setPower(ArmPower);
-            telemetry.addData("Lift", "Initialized");
 
 // Take Team 16354 Charger for future use
-
-
 
 
 
@@ -214,10 +186,15 @@ public class TeamRobotCode22311 extends LinearOpMode {
             telemetry.addData("Status", "Run Time: " + runtime.toString());
             telemetry.addData("Front left/Right", "%4.2f, %4.2f", leftFrontPower, rightFrontPower);
             telemetry.addData("Back  left/Right", "%4.2f, %4.2f", leftBackPower, rightBackPower);
+            telemetry.addData("ClawPosition", "%4.2f", clawPos);
             telemetry.addData("ReductionFactor", "%4.2f", reductionFactor);
 
             telemetry.update();
         }
+    }
+
+    public boolean debounce(double time, double duration) {
+        return runtime.milliseconds() - time > duration;
     }
 
 
