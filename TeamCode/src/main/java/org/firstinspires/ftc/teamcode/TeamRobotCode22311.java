@@ -76,8 +76,9 @@ public class TeamRobotCode22311 extends LinearOpMode {
     private DcMotor rightBackDrive = null;
     private Servo ClawMotor = null;
     private DcMotor ArmLift = null;
+    private final double MAXSPEED = 2.25;
+    private final double  MINSPEED = 1.75;
 
-    @Override
     public void runOpMode() {
 
         // Initialize the hardware variables. Note that the strings used here must correspond
@@ -106,26 +107,30 @@ public class TeamRobotCode22311 extends LinearOpMode {
         // run until the end of the match (driver presses STOP)
 
 
-        double axial = (-gamepad1.left_stick_y);  // Note: pushing stick forward gives negative value
-        double lateral = (gamepad1.left_stick_x);
-        double yaw = (gamepad1.right_stick_x);
-        double Claw = gamepad2.right_stick_y;
 
-        double leftFrontPower = axial + lateral + yaw;
-        double rightFrontPower = axial - lateral - yaw;
-        double leftBackPower = axial - lateral + yaw;
-        double rightBackPower = axial + lateral - yaw;
-        double ClawForwardPower = Claw;
+
+
 
 
 
         double buttonPress = runtime.milliseconds();
-        double reductionFactor = 2.0;
+        double reductionFactor = MINSPEED;
         while (opModeIsActive()) {
+
+            double axial = squareIt(-gamepad1.left_stick_y) / reductionFactor;  // Note: pushing stick forward gives negative value
+            double lateral = squareIt(gamepad1.left_stick_x) / reductionFactor;
+            double yaw = squareIt(gamepad1.right_stick_x) / reductionFactor;
+            double Claw = gamepad2.right_stick_y;
             double max;
+            double leftFrontPower = axial + lateral + yaw;
+            double rightFrontPower = axial - lateral - yaw;
+            double leftBackPower = axial - lateral + yaw;
+            double rightBackPower = axial + lateral - yaw;
+            double ClawForwardPower = Claw;
             max = Math.max(Math.abs(leftFrontPower), Math.abs(rightFrontPower));
             max = Math.max(max, Math.abs(leftBackPower));
             max = Math.max(max, Math.abs(rightBackPower));
+
 //            max = Math.max(max, Math.abs(ClawForwardPower));
 //            max = Math.max(max, Math.abs(ArmsForward));
 
@@ -172,17 +177,15 @@ public class TeamRobotCode22311 extends LinearOpMode {
 
             }
 
-            if(gamepad1.left_bumper = true);
-                leftFrontPower = 0.5;
-                rightBackPower = 0.5;
-                leftBackPower = 0.5;
-                rightFrontPower = 0.5;
+            if(gamepad1.left_bumper){
+                reductionFactor = MINSPEED;
+            }
 
-            if(gamepad1.right_bumper = true);
-            leftFrontPower = 1.00;
-            rightBackPower = 1.00;
-            leftBackPower = 1.00;
-            rightFrontPower = 1.00;
+            if(gamepad1.right_bumper){
+                reductionFactor = MAXSPEED;
+            }
+
+
 
 
             // Send calculated power to wheels
@@ -210,6 +213,14 @@ public class TeamRobotCode22311 extends LinearOpMode {
     }
 
 
+    public double squareIt(double input) {
+        double sign = Math.signum(input);
+        if (sign > 0) {
+            return input * input;
+        } else {
+            return -(input * input);
+        }
+    }
 
 
     // Calculate the COUNTS_PER_INCH for your specific drive train.
