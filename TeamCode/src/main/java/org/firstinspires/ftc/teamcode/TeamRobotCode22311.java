@@ -81,6 +81,7 @@ public class TeamRobotCode22311 extends LinearOpMode {
     private final double CLAW_MOVEMENT_SIZE  = 0.05;
     private final double CLAW_MAX_POS  = 0.6;
     private final double CLAW_MIN_POS  = 0.2;
+    private final int BUTTON_BOUNCE_MS = 100;
 
     public void runOpMode() {
 
@@ -92,6 +93,8 @@ public class TeamRobotCode22311 extends LinearOpMode {
         rightBackDrive = hardwareMap.get(DcMotor.class, "Right_Rear");
         ClawMotor = hardwareMap.get(Servo.class, "Intake");
         ArmLift = hardwareMap.get(DcMotor.class, "Lift");
+
+        ArmLift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         leftFrontDrive.setDirection(DcMotor.Direction.FORWARD);
         leftBackDrive.setDirection(DcMotor.Direction.FORWARD);
@@ -159,11 +162,11 @@ public class TeamRobotCode22311 extends LinearOpMode {
             }
 
 
-            if (gamepad2.right_bumper && debounce(buttonPress, 250)) {
+            if (gamepad2.right_bumper && debounce(buttonPress, BUTTON_BOUNCE_MS)) {
                 clawPos += CLAW_MOVEMENT_SIZE;
                 clawPos = Math.min(CLAW_MAX_POS, clawPos);
                 buttonPress = runtime.milliseconds();
-            } else if (gamepad2.left_bumper  && debounce(buttonPress, 250)) {
+            } else if (gamepad2.left_bumper  && debounce(buttonPress, BUTTON_BOUNCE_MS)) {
                 clawPos -= CLAW_MOVEMENT_SIZE;
                 clawPos = Math.max(CLAW_MIN_POS, clawPos);
                 buttonPress = runtime.milliseconds();
