@@ -17,18 +17,18 @@ public class TeamRobotAuto extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
 
         driveTrains = new DriveTrains(this);
-        colorSensor = hardwareMap.get(ColorSensor.class, "sensor_color_distance");
-        distanceSensor = hardwareMap.get(DistanceSensor.class, "sensor_color_distance");
+        colorSensor = hardwareMap.get(ColorSensor.class, "sensor_color");
+        distanceSensor = hardwareMap.get(DistanceSensor.class, "sensor_color");
 
         waitForStart();
         while (opModeIsActive()) {
 
-            double distanceOfSensor = distanceSensor.getDistance(DistanceUnit.MM);
+            double distanceOfSensor = distanceSensor.getDistance(DistanceUnit.CM);
 
-            driveTrains.setPower(0,-0.2,0);
-            while(distanceOfSensor > 100) {
-                telemetry.addData("distance > ", "%4.2f mm", distanceOfSensor);
-                distanceOfSensor = distanceSensor.getDistance(DistanceUnit.MM);
+            while(distanceOfSensor > 2) {
+                driveTrains.setPower(0,-0.2,0);
+                distanceOfSensor = distanceSensor.getDistance(DistanceUnit.CM);
+                telemetry.addData("distance > ", "%4.2f cm", distanceOfSensor);
                 telemetry.update();
             }
 
