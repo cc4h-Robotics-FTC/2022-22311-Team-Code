@@ -29,6 +29,7 @@
 
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -70,12 +71,10 @@ public class TeamRobotCode22311 extends LinearOpMode {
 
     // Declare OpMode members for each of the 4 motors.
     private ElapsedTime runtime = new ElapsedTime();
-    private DcMotor leftFrontDrive = null;
-    private DcMotor leftBackDrive = null;
-    private DcMotor rightFrontDrive = null;
-    private DcMotor rightBackDrive = null;
+
     private Servo ClawMotor = null;
     private DcMotor ArmLift = null;
+    private DriveTrains driveTrains = null;
     private final double MAXSPEED = 3.00 ;
     private final double  MINSPEED = 2.25;
     private final double CLAW_MOVEMENT_SIZE  = 0.05;
@@ -87,19 +86,14 @@ public class TeamRobotCode22311 extends LinearOpMode {
 
         // Initialize the hardware variables. Note that the strings used here must correspond
         // to the names assigned during the robot configuration step on the DS or RC devices.
-        leftFrontDrive = hardwareMap.get(DcMotor.class, "Left_Front");
-        leftBackDrive = hardwareMap.get(DcMotor.class, "Left_Rear");
-        rightFrontDrive = hardwareMap.get(DcMotor.class, "Right_Front");
-        rightBackDrive = hardwareMap.get(DcMotor.class, "Right_Rear");
+
         ClawMotor = hardwareMap.get(Servo.class, "Intake");
         ArmLift = hardwareMap.get(DcMotor.class, "Lift");
 
         ArmLift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        leftFrontDrive.setDirection(DcMotor.Direction.FORWARD);
-        leftBackDrive.setDirection(DcMotor.Direction.FORWARD);
-        rightFrontDrive.setDirection(DcMotor.Direction.FORWARD);
-        rightBackDrive.setDirection(DcMotor.Direction.FORWARD);
+        driveTrains = new DriveTrains(this);
+
         ClawMotor.setDirection(Servo.Direction.FORWARD);
         ArmLift.setDirection(DcMotor.Direction.FORWARD);
 
@@ -121,25 +115,8 @@ public class TeamRobotCode22311 extends LinearOpMode {
             double lateral = squareIt(gamepad1.left_stick_x) / reductionFactor;
             double yaw = squareIt(gamepad1.right_stick_x) / reductionFactor;
             double ArmPower = squareIt(-gamepad2.left_stick_y);
-            double max;
-            double leftFrontPower = axial + lateral + yaw;
-            double rightFrontPower = axial - lateral - yaw;
-            double leftBackPower = axial - lateral + yaw;
-            double rightBackPower = axial + lateral - yaw;
 
-
-            max = Math.max(Math.abs(leftFrontPower), Math.abs(rightFrontPower));
-            max = Math.max(max, Math.abs(leftBackPower));
-            max = Math.max(max, Math.abs(rightBackPower));
-
-//            max = Math.max(max, Math.abs(ClawForwardPower));
-//            max = Math.max(max, Math.abs(ArmsForward));
-
-        if (max > 1.0) {
-            leftFrontPower /= max;
-            rightFrontPower /= max;
-            leftBackPower /= max;
-            rightBackPower /= max;
+            driveTrains.setPower(axial,lateral,yaw);
 
             if (gamepad2.right_bumper ) {
                 //encoderDrive(0.25,10.0);
@@ -151,7 +128,6 @@ public class TeamRobotCode22311 extends LinearOpMode {
 
             telemetry.addData("Path", "Complete");
 
-            }
 
             if(gamepad1.left_bumper){
                 reductionFactor = MINSPEED;
@@ -174,11 +150,6 @@ public class TeamRobotCode22311 extends LinearOpMode {
             ClawMotor.setPosition(clawPos);
 
 
-            // Send calculated power to wheels
-            leftFrontDrive.setPower(leftFrontPower);
-            rightFrontDrive.setPower(rightFrontPower);
-            leftBackDrive.setPower(leftBackPower);
-            rightBackDrive.setPower(rightBackPower);
             ArmLift.setPower(ArmPower);
 
 // Take Team 16354 Charger for future use
@@ -187,8 +158,6 @@ public class TeamRobotCode22311 extends LinearOpMode {
 
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: " + runtime.toString());
-            telemetry.addData("Front left/Right", "%4.2f, %4.2f", leftFrontPower, rightFrontPower);
-            telemetry.addData("Back  left/Right", "%4.2f, %4.2f", leftBackPower, rightBackPower);
             telemetry.addData("ClawPosition", "%4.2f", clawPos);
             telemetry.addData("ReductionFactor", "%4.2f", reductionFactor);
 
