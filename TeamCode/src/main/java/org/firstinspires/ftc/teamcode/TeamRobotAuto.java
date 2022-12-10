@@ -60,7 +60,7 @@ public class TeamRobotAuto extends LinearOpMode {
         int blue = colorSensor.blue();
         int green = colorSensor.green();
 
-        driveTrains.setPower(0.2, 0, 0);
+        driveTrains.setPower(0, 0.2, 0);
         sleep(1000);
         int largerNumber = Math.max(red, blue);
         int LargestNumberChoice = Math.max(green, largerNumber);
