@@ -42,7 +42,19 @@ public class TeamRobotAuto extends LinearOpMode {
 
             colorSensor.enableLed(true);
             sleep(250);
-            readColor();
+            int ColorInteger = readColor();
+            if(ColorInteger == 1){
+                telemetry.addData("Pos 1", 1);
+                PositionOne();
+            }
+            else if(ColorInteger == 2){
+                telemetry.addData("Pos 2", 2);
+                PositionTwo();
+            }
+            else {
+                telemetry.addData("Pos 3", 3);
+                PositionThree();
+            }
             telemetry.addData("Red > ", "%d", colorSensor.red());
             telemetry.addData("Blue > ", "%d", colorSensor.blue());
             telemetry.addData("Green > ", "%d", colorSensor.green());
@@ -60,24 +72,20 @@ public class TeamRobotAuto extends LinearOpMode {
         int blue = colorSensor.blue();
         int green = colorSensor.green();
 
-        driveTrains.setPower(0, 0.2, 0);
-        sleep(1000);
+
         int largerNumber = Math.max(red, blue);
         int LargestNumberChoice = Math.max(green, largerNumber);
 
         if (LargestNumberChoice == red) {
-            PositionOne();
-            sleep(1000);
+            return 1;
         }
 
         else if (LargestNumberChoice == blue){
-            PositionTwo();
-            sleep(1000);
+            return 2;
         }
 
         else if (LargestNumberChoice == green){
-            PositionThree();
-            sleep(1000);
+            return 3;
         }
 
 
