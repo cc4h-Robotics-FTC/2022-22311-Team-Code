@@ -43,26 +43,31 @@ public class TeamRobotAuto extends LinearOpMode {
             colorSensor.enableLed(true);
             sleep(250);
             int ColorInteger = readColor();
+            telemetry.addData("Go to Pos ", "%d",ColorInteger);
+            telemetry.update();
+
+            sleep(500);
+            driveTrains.setPower(0, -0.2, 0);
+            sleep(1500);
+            driveTrains.setPower(0, 0.0, 0);
             if(ColorInteger == 1){
-                telemetry.addData("Pos 1", 1);
                 PositionOne();
             }
             else if(ColorInteger == 2){
-                telemetry.addData("Pos 2", 2);
                 PositionTwo();
             }
             else {
-                telemetry.addData("Pos 3", 3);
                 PositionThree();
             }
-            telemetry.addData("Red > ", "%d", colorSensor.red());
-            telemetry.addData("Blue > ", "%d", colorSensor.blue());
-            telemetry.addData("Green > ", "%d", colorSensor.green());
+//            telemetry.addData("Red > ", "%d", colorSensor.red());
+//            telemetry.addData("Blue > ", "%d", colorSensor.blue());
+//            telemetry.addData("Green > ", "%d", colorSensor.green());
 
 
 
             telemetry.update();
             colorSensor.enableLed(false);
+            break;
         }
 
 
@@ -92,13 +97,21 @@ public class TeamRobotAuto extends LinearOpMode {
         return 0;
     }
     public void PositionThree(){
-        driveTrains.setPower(-0.2,0,0 );
+
+        driveTrains.setPower(-0.2, 0, 0);
+        sleep(3000);
+        driveTrains.setPower(0, 0,0);
     }
     public void PositionOne(){
         driveTrains.setPower(0.2, 0, 0);
+        sleep(3000);
+        driveTrains.setPower(0,0,0);
+
     }
     public void PositionTwo(){
-        driveTrains.setPower(0, 0, 0);
+        for(int i = 0; i<200; i++) {
+            driveTrains.setPower(0  , 0, 0);
+        }
     }
 
 
