@@ -21,6 +21,7 @@ public class TeamRobotAuto extends LinearOpMode {
         colorSensor = hardwareMap.get(ColorSensor.class, "sensor_color");
         distanceSensor = hardwareMap.get(DistanceSensor.class, "sensor_color");
 
+
         waitForStart();
         while (opModeIsActive()) {
             int LoopCount = 0;
@@ -32,6 +33,9 @@ public class TeamRobotAuto extends LinearOpMode {
                 distanceOfSensor = distanceSensor.getDistance(DistanceUnit.CM);
                 telemetry.addData("distance > ", "%4.2f cm", distanceOfSensor);
                 telemetry.update();
+                if(LoopCount > 400){
+                    System.exit(0);
+                }
 
             }
 
@@ -47,9 +51,12 @@ public class TeamRobotAuto extends LinearOpMode {
             telemetry.update();
 
             sleep(500);
-            driveTrains.setPower(0, -0.2, 0);
-            sleep(1500);
-            driveTrains.setPower(0, 0.0, 0);
+            for(int i = 0; i<50000; i++) {
+                driveTrains.setPower(0, -0.2, 0);
+            }
+            for(int i = 0; i<14000;i++) {
+                driveTrains.setPower(0, 0.2, 0);
+            }
             if(ColorInteger == 1){
                 PositionOne();
             }
@@ -97,15 +104,14 @@ public class TeamRobotAuto extends LinearOpMode {
         return 0;
     }
     public void PositionThree(){
-
-        driveTrains.setPower(-0.2, 0, 0);
-        sleep(3000);
-        driveTrains.setPower(0, 0,0);
+        for(int i = 0; i<59000; i++) {
+            driveTrains.setPower(0.2, 0, 0);
+        }
     }
     public void PositionOne(){
-        driveTrains.setPower(0.2, 0, 0);
-        sleep(3000);
-        driveTrains.setPower(0,0,0);
+        for(int i = 0; i<59000; i++) {
+            driveTrains.setPower(-0.2, 0, 0);
+        }
 
     }
     public void PositionTwo(){
