@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
@@ -8,8 +9,8 @@ import com.qualcomm.robotcore.hardware.DistanceSensor;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 
-@Autonomous(name="Robot: 22133Autonomous")
-public class TeamRobotAuto extends LinearOpMode {
+@Autonomous(name="Robot: 22133Autonomous1")
+public class TeamRobotAuto1 extends LinearOpMode {
 
     private ColorSensor colorSensor = null;
     private DistanceSensor distanceSensor = null;
@@ -32,9 +33,12 @@ public class TeamRobotAuto extends LinearOpMode {
                 driveTrains.setPower(0, -0.2, 0);
                 distanceOfSensor = distanceSensor.getDistance(DistanceUnit.CM);
                 telemetry.addData("distance > ", "%4.2f cm", distanceOfSensor);
+                telemetry.addData("loopcount",LoopCount);
                 telemetry.update();
-                if(LoopCount > 800){
+
+                if(LoopCount > 400){
                     System.exit(0);
+
                 }
 
             }
@@ -51,11 +55,10 @@ public class TeamRobotAuto extends LinearOpMode {
             telemetry.update();
 
             sleep(500);
-            //push the cone forward a little
             for(int i = 0; i<50000; i++) {
                 driveTrains.setPower(0, -0.2, 0);
             }
-            for(int i = 0; i<20000;i++) {
+            for(int i = 0; i<14000;i++) {
                 driveTrains.setPower(0, 0.2, 0);
             }
             if(ColorInteger == 1){
