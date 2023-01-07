@@ -58,4 +58,33 @@ public class DriveTrains {
         opMode.telemetry.addData("Back  left/Right", "%4.2f, %4.2f", leftBackPower, rightBackPower);
 
     }
+    public void init_encoders (){
+        leftBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leftBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        leftFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leftFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+
+    }
+    public void setPosition ( int Pos){
+        leftBackDrive.setTargetPosition(Pos);
+        leftBackDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//        leftFrontDrive.setTargetPosition(Pos);
+//        leftFrontDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//        rightBackDrive.setTargetPosition(Pos);
+//        rightBackDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//        rightFrontDrive.setTargetPosition(Pos);
+//        rightFrontDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+
+    }
+    public boolean isBusy(){
+
+        return leftBackDrive.isBusy();
+
+    }
 }
