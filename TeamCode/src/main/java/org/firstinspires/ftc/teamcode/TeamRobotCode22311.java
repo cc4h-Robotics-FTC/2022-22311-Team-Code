@@ -115,8 +115,13 @@ public class TeamRobotCode22311 extends LinearOpMode {
             double lateral = squareIt(gamepad1.left_stick_x) / reductionFactor;
             double yaw = squareIt(gamepad1.right_stick_x) / reductionFactor;
             double ArmPower = squareIt(-gamepad2.left_stick_y);
+            double TrueArmPower = 0;
 
             driveTrains.setPower(axial,lateral,yaw);
+
+            if (ArmPower < 0) {
+                ArmPower = ArmPower / 2.0;
+             }
 
             if (gamepad2.right_bumper ) {
                 //encoderDrive(0.25,10.0);
