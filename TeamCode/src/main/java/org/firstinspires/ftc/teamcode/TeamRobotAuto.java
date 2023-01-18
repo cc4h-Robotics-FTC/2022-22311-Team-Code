@@ -105,12 +105,12 @@ public class TeamRobotAuto extends LinearOpMode {
         return 0;
     }
     public void PositionThree(){
-        for(int i = 0; i<59000; i++) {
+        for(int i = 0; i<58000; i++) {
             driveTrains.setPower(0.2, 0, 0);
         }
     }
     public void PositionOne(){
-        for(int i = 0; i<59000; i++) {
+        for(int i = 0; i<66000; i++) {
             driveTrains.setPower(-0.2, 0, 0);
         }
 
