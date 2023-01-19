@@ -109,8 +109,12 @@ public class TeamRobotCode22311 extends LinearOpMode {
         double buttonPress = runtime.milliseconds();
         double reductionFactor = MINSPEED;
         double clawPos = ClawMotor.getPosition();
-        while (opModeIsActive()) {
 
+        ArmLift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        ArmLift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        double ArmBottom = ArmLift.getCurrentPosition();
+        while (opModeIsActive()) {
+            double ArmLiftPosition = ArmLift.getCurrentPosition();
             double axial = squareIt(-gamepad1.left_stick_y) / reductionFactor;  // Note: pushing stick forward gives negative value
             double lateral = squareIt(gamepad1.left_stick_x) / reductionFactor;
             double yaw = squareIt(gamepad1.right_stick_x) / reductionFactor;
@@ -122,16 +126,6 @@ public class TeamRobotCode22311 extends LinearOpMode {
             if (ArmPower < 0) {
                 ArmPower = ArmPower / 2.0;
              }
-
-            if (gamepad2.right_bumper ) {
-                //encoderDrive(0.25,10.0);
-            }
-
-
-            // Send telemetry message to indicate successful Encoder reset
-            telemetry.addData("Starting at", "%7d", ArmLift.getCurrentPosition());
-
-            telemetry.addData("Path", "Complete");
 
 
             if(gamepad1.left_bumper){
@@ -154,10 +148,17 @@ public class TeamRobotCode22311 extends LinearOpMode {
             }
             ClawMotor.setPosition(clawPos);
 
+            telemetry.addData("ArmPower", "%4.2f", ArmPower);
 
-            ArmLift.setPower(ArmPower);
+            if(ArmBottom <= ArmLiftPosition || ArmPower > 0) {
+                ArmLift.setPower(ArmPower);
+            } else {
+                ArmLift.setPower(0);
+            }
 
-// Take Team 16354 Charger for future use
+
+            telemetry.addData("CurrentArmPosition", "%4.2f", ArmLiftPosition);
+            telemetry.addData("Buttom ArmPosition","%4.2f", ArmBottom);
 
 
 
@@ -199,30 +200,30 @@ public class TeamRobotCode22311 extends LinearOpMode {
      *  3) Driver stops the opmode running.
      */
 
-    public void encoderDrive(double speed,
-                             double timeoutS) {
-        int newArmTarget;
-        int newBackArmTarget;
+//    public void encoderDrive(double speed,
+//                             double timeoutS) {
+//        int newArmTarget;
+//        int newBackArmTarget;
 
 
         // Ensure that the opmode is still active
-        if (opModeIsActive()) {
-
-            // Determine new target position, and pass to motor controller
-            newArmTarget = ArmLift.getCurrentPosition() + (288);
-            newBackArmTarget = ArmLift.getCurrentPosition() - (288);
-
-            ArmLift.setTargetPosition(newArmTarget);
-
-
-
-            // Turn On RUN_TO_POSITION
-            ArmLift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-
-            // reset the timeout time and start motion.
-            runtime.reset();
-            ArmLift.setPower(Math.abs(speed));
+//        if (opModeIsActive()) {
+//
+//            // Determine new target position, and pass to motor controller
+//            newArmTarget = ArmLift.getCurrentPosition() + (288);
+//            newBackArmTarget = ArmLift.getCurrentPosition() - (288);
+//
+//            ArmLift.setTargetPosition(newArmTarget);
+//
+//
+//
+//            // Turn On RUN_TO_POSITION
+//            ArmLift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//
+//
+//            // reset the timeout time and start motion.
+//            runtime.reset();
+//            ArmLift.setPower(Math.abs(speed));
 
             // keep looping while we are still active, and there is time left, and both motors are running.
             // Note: We use (isBusy() && isBusy()) in the loop test, which means that when EITHER motor hits
@@ -230,22 +231,22 @@ public class TeamRobotCode22311 extends LinearOpMode {
             // always end the motion as soon as possible.
             // However, if you require that BOTH motors have finished their moves before the robot continues
             // onto the next step, use (isBusy() || isBusy()) in the loop test.
-            while (opModeIsActive() &&
-                    (runtime.seconds() < timeoutS) &&
-                    (ArmLift.isBusy())) {
-
-                // Display it for the driver.
-                telemetry.addData("Running to", " %7d", newArmTarget);
-                telemetry.addData("Currently at", " at %7d", ArmLift.getCurrentPosition());
-            }
+//            while (opModeIsActive() &&
+//                    (runtime.seconds() < timeoutS) &&
+//                    (ArmLift.isBusy())) {
+//
+//                // Display it for the driver.
+//                telemetry.addData("Running to", " %7d", 1);
+//                telemetry.addData("Currently at", " at %7d", ArmLift.getCurrentPosition());
+//            }
 
             // Stop all motion;
 
 
             // Turn off RUN_TO_POSITION
 //            ArmLift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-        }
-
-    }
+//
+//        }
+//
+//    }
 }

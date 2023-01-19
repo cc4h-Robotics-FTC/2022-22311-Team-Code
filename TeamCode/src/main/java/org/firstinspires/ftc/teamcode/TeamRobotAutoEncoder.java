@@ -23,30 +23,27 @@ public class TeamRobotAutoEncoder extends LinearOpMode {
 
         waitForStart();
         while (opModeIsActive()) {
-            driveTrains.init_encoders();
+            //Drive to cone!!
+            autoDrive(0,-0.2,0, 1200);
 
-            driveTrains.setPosition(250);
 
-            driveTrains.setPower(0,-0.2,0);
-
-            while (driveTrains.isBusy()) {
-            }
-            driveTrains.setPower(0,0,0);
-
+            // Read the cone
             colorSensor.enableLed(true);
             sleep(250);
             int ColorInteger = readColor();
+
             telemetry.addData("Go to Pos ", "%d",ColorInteger);
             telemetry.update();
 
-            sleep(500);
-            driveTrains.init_encoders();
-            driveTrains.setPosition(100);
-            driveTrains.setPower(0, 0.2, 0);
-            while(driveTrains.isBusy()){
+            sleep(1000);
+            //push cone out of the way
+            autoDrive(0,-0.2,0, 800);
+            autoDrive(0,0.2,0, 200);
 
-            }
-            driveTrains.setPower(0,0,0);
+
+
+
+
 
 
             if(ColorInteger == 1){
@@ -96,23 +93,31 @@ public class TeamRobotAutoEncoder extends LinearOpMode {
         return 0;
     }
     public void PositionThree(){
-//        for(int i = 0; i<59000; i++) {
-//            driveTrains.setPower(0.2, 0, 0);
-//        }
+
+
+        autoDrive(0.2, 0, 0, 1250);
+
     }
     public void PositionOne(){
-
-//        for(int i = 0; i<59000; i++) {
-//            driveTrains.setPower(-0.2, 0, 0);
-//        }
+        autoDrive(-0.2, 0, 0, 1300);
 
     }
     public void PositionTwo() {
-//        driveTrains.setPower(0, 0, 0);
-//        }
+
     }
 
 
 
+    private void autoDrive(double axial, double lateral, double yaw, int pos){
+        driveTrains.init_encoders();
+
+        driveTrains.setPower(axial,lateral,yaw);
+
+        while (Math.abs(driveTrains.getPosition()) < pos ) {
+            telemetry.addData("Go to Pos ", "%d",driveTrains.getPosition());
+            telemetry.update();
+        }
+        driveTrains.setPower(0,0,0);
+    }
 }
 

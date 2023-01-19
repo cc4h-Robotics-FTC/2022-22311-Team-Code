@@ -33,7 +33,7 @@ public class TeamRobotAuto extends LinearOpMode {
                 distanceOfSensor = distanceSensor.getDistance(DistanceUnit.CM);
                 telemetry.addData("distance > ", "%4.2f cm", distanceOfSensor);
                 telemetry.update();
-                if(LoopCount > 800){
+                if(LoopCount > 900){
                     System.exit(0);
                 }
 
@@ -52,10 +52,10 @@ public class TeamRobotAuto extends LinearOpMode {
 
             sleep(500);
             //push the cone forward a little
-            for(int i = 0; i<50000; i++) {
+            for(int i = 0; i<60000; i++) {
                 driveTrains.setPower(0, -0.2, 0);
             }
-            for(int i = 0; i<20000;i++) {
+            for(int i = 0; i<30000;i++) {
                 driveTrains.setPower(0, 0.2, 0);
             }
             if(ColorInteger == 1){
@@ -105,12 +105,12 @@ public class TeamRobotAuto extends LinearOpMode {
         return 0;
     }
     public void PositionThree(){
-        for(int i = 0; i<59000; i++) {
+        for(int i = 0; i<61000; i++) {
             driveTrains.setPower(0.2, 0, 0);
         }
     }
     public void PositionOne(){
-        for(int i = 0; i<59000; i++) {
+        for(int i = 0; i<61000; i++) {
             driveTrains.setPower(-0.2, 0, 0);
         }
 

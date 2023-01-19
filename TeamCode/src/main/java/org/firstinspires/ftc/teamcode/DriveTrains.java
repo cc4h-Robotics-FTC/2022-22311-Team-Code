@@ -60,19 +60,19 @@ public class DriveTrains {
     }
     public void init_encoders (){
         leftBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        leftBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        leftBackDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         leftFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        leftFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        leftFrontDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rightBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        rightBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightBackDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rightFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        rightFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightFrontDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
 
     }
     public void setPosition ( int Pos){
-        leftBackDrive.setTargetPosition(Pos);
-        leftBackDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//        leftBackDrive.setTargetPosition(Pos);
+//        leftBackDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 //        leftFrontDrive.setTargetPosition(Pos);
 //        leftFrontDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 //        rightBackDrive.setTargetPosition(Pos);
@@ -86,5 +86,9 @@ public class DriveTrains {
 
         return leftBackDrive.isBusy();
 
+    }
+
+    public int getPosition() {
+        return leftBackDrive.getCurrentPosition();
     }
 }
