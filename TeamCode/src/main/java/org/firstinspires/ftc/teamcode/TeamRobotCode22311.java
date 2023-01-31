@@ -78,8 +78,8 @@ public class TeamRobotCode22311 extends LinearOpMode {
     private final double MAXSPEED = 3.00 ;
     private final double  MINSPEED = 2.25;
     private final double CLAW_MOVEMENT_SIZE  = 0.05;
-    private final double CLAW_MAX_POS  = 0.6;
-    private final double CLAW_MIN_POS  = 0.2;
+    private final double CLAW_MAX_POS  = 0.2;
+    private final double CLAW_MIN_POS  = 2;
     private final int BUTTON_BOUNCE_MS = 100;
 
     public void runOpMode() {
@@ -137,15 +137,26 @@ public class TeamRobotCode22311 extends LinearOpMode {
             }
 
 
+//            if (gamepad2.right_bumper && debounce(buttonPress, BUTTON_BOUNCE_MS)) {
+//                clawPos += CLAW_MOVEMENT_SIZE;
+//                clawPos = Math.min(CLAW_MAX_POS, clawPos);
+//                buttonPress = runtime.milliseconds();
+//            } else if (gamepad2.left_bumper  && debounce(buttonPress, BUTTON_BOUNCE_MS)) {
+//                clawPos -= CLAW_MOVEMENT_SIZE;
+//                clawPos = Math.max(CLAW_MIN_POS, clawPos);
+//                buttonPress = runtime.milliseconds();
+//            }
+
             if (gamepad2.right_bumper && debounce(buttonPress, BUTTON_BOUNCE_MS)) {
-                clawPos += CLAW_MOVEMENT_SIZE;
+                clawPos += 0.05;
                 clawPos = Math.min(CLAW_MAX_POS, clawPos);
                 buttonPress = runtime.milliseconds();
             } else if (gamepad2.left_bumper  && debounce(buttonPress, BUTTON_BOUNCE_MS)) {
-                clawPos -= CLAW_MOVEMENT_SIZE;
+                clawPos -= 0.05;
                 clawPos = Math.max(CLAW_MIN_POS, clawPos);
                 buttonPress = runtime.milliseconds();
             }
+
             ClawMotor.setPosition(clawPos);
 
             telemetry.addData("ArmPower", "%4.2f", ArmPower);
