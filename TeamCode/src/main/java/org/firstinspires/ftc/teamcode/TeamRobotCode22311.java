@@ -79,7 +79,7 @@ public class TeamRobotCode22311 extends LinearOpMode {
     private final double  MINSPEED = 2.25;
     private final double CLAW_MOVEMENT_SIZE  = 0.05;
     private final double CLAW_MAX_POS  = 0.2;
-    private final double CLAW_MIN_POS  = 2;
+    private final double CLAW_MIN_POS  = 0.4;
     private final int BUTTON_BOUNCE_MS = 100;
 
     public void runOpMode() {
