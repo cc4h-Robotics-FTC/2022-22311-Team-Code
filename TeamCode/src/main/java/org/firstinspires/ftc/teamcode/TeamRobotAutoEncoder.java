@@ -25,8 +25,6 @@ public class TeamRobotAutoEncoder extends LinearOpMode {
         while (opModeIsActive()) {
             //Drive to cone!!
             autoDrive(0,-0.2,0, 1200);
-
-
             // Read the cone
             colorSensor.enableLed(true);
             sleep(250);
@@ -38,7 +36,7 @@ public class TeamRobotAutoEncoder extends LinearOpMode {
             sleep(1000);
             //push cone out of the way
             autoDrive(0,-0.2,0, 800);
-            autoDrive(0,0.2,0, 200);
+            autoDrive(0,0.2,0, 300);
 
 
 
