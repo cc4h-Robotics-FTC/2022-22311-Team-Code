@@ -82,7 +82,9 @@ public class TeamRobotCode22311 extends LinearOpMode {
     private final double CLAW_MIN_POS  = 0.4;
     private final int BUTTON_BOUNCE_MS = 100;
 
+
     public void runOpMode() {
+
 
         // Initialize the hardware variables. Note that the strings used here must correspond
         // to the names assigned during the robot configuration step on the DS or RC devices.
@@ -96,6 +98,7 @@ public class TeamRobotCode22311 extends LinearOpMode {
 
         ClawMotor.setDirection(Servo.Direction.FORWARD);
         ArmLift.setDirection(DcMotor.Direction.FORWARD);
+        double ArmBottom = ArmLift.getCurrentPosition();
 
         // Wait for the game to start (driver presses PLAY)
         telemetry.addData("Status", "Initialized");
@@ -112,7 +115,7 @@ public class TeamRobotCode22311 extends LinearOpMode {
 
         ArmLift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         ArmLift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        double ArmBottom = ArmLift.getCurrentPosition();
+//        double ArmBottom = ArmLift.getCurrentPosition();
         while (opModeIsActive()) {
             double ArmLiftPosition = ArmLift.getCurrentPosition();
             double axial = squareIt(-gamepad1.left_stick_y) / reductionFactor;  // Note: pushing stick forward gives negative value
