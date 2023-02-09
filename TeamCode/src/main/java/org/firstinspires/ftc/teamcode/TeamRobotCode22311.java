@@ -98,6 +98,7 @@ public class TeamRobotCode22311 extends LinearOpMode {
 
         ClawMotor.setDirection(Servo.Direction.FORWARD);
         ArmLift.setDirection(DcMotor.Direction.FORWARD);
+        ArmLift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         double ArmBottom = ArmLift.getCurrentPosition();
 
         // Wait for the game to start (driver presses PLAY)
@@ -172,7 +173,7 @@ public class TeamRobotCode22311 extends LinearOpMode {
 
 
             telemetry.addData("CurrentArmPosition", "%4.2f", ArmLiftPosition);
-            telemetry.addData("Buttom ArmPosition","%4.2f", ArmBottom);
+            telemetry.addData("Bottom ArmPosition","%4.2f", ArmBottom);
 
 
 
